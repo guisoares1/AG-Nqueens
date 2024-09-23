@@ -113,29 +113,32 @@ def plot_board_with_matplotlib(n, solution):
     board[1::2, 1::2] = 1  # Quadrados brancos nas posições ímpares
 
     # Configura o gráfico
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(6, 6))
 
-    # Exibe o tabuleiro
-    ax.imshow(board, cmap='gray', interpolation='nearest')
+    # Exibe o tabuleiro com a origem no canto inferior esquerdo
+    ax.imshow(board, cmap='gray', interpolation='nearest', origin='lower')
 
-    # Posiciona as rainhas
+    # Posiciona as rainhas de baixo para cima
     for row, col in enumerate(solution):
-        x = col - 1
-        y = row
+        x = col - 1  # Coluna (eixo x)
+        y = n - row - 1  # Ajuste da linha (eixo y) para inverter a orientação
         circle = plt.Circle((x, y), 0.4, color='red', fill=True)
         ax.add_patch(circle)
 
+    # Ajusta os limites dos eixos
     ax.set_xlim(-0.5, n - 0.5)
     ax.set_ylim(-0.5, n - 0.5)
+
+    # Remove as marcas dos eixos e mantém a proporção
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_aspect('equal')
-    plt.gca().invert_yaxis()  # Inverte o eixo y para que a posição [0,0] fique no canto inferior esquerdo
 
     plt.show()
 
+
 # Parâmetros do algoritmo
-n = 100
+n = 200
 population_size = 1000
 max_generations = 100000
 mutation_rate = 0.8  # Conforme especificado no algoritmo
