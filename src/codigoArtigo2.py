@@ -120,14 +120,11 @@ def plot_board_with_matplotlib(n, solution):
 
     # Posiciona as rainhas
     for row, col in enumerate(solution):
-        # Ajusta para índices baseados em 0
         x = col - 1
         y = row
-        # Desenha um círculo vermelho representando a rainha
         circle = plt.Circle((x, y), 0.4, color='red', fill=True)
         ax.add_patch(circle)
 
-    # Ajusta os limites e o aspecto
     ax.set_xlim(-0.5, n - 0.5)
     ax.set_ylim(-0.5, n - 0.5)
     ax.set_xticks([])
@@ -138,19 +135,17 @@ def plot_board_with_matplotlib(n, solution):
     plt.show()
 
 # Parâmetros do algoritmo
-n = 15
+n = 100
 population_size = 1000
 max_generations = 100000
 mutation_rate = 0.8  # Conforme especificado no algoritmo
 
-# Executar o algoritmo genético
 solution, iterations = genetic_algorithm(n, population_size, max_generations, mutation_rate)
 
-# Imprimir a solução
+
 if solution:
-    print(f"Solução encontrada em {iterations} iterações.")
+    print(f"Tamanho do tabuleiro: {n}.")
     print("Solução (representação das posições das rainhas):", solution)
-    # Plotar o tabuleiro com matplotlib
     plot_board_with_matplotlib(n, solution)
 else:
     print("Nenhuma solução encontrada.")
