@@ -1,6 +1,8 @@
 import math
 import random
 import turtle
+import matplotlib.pyplot as plt
+import numpy as np
 
 def generate_chromosome(n):
     chromosome = list(range(1, n + 1))
@@ -104,53 +106,41 @@ def genetic_algorithm(n, population_size=100, max_generations=1000, mutation_rat
     print("Nenhuma solução encontrada.")
     return None, max_generations
 
-def draw_box(t, x, y, size, fill_color):
-    """
-    Função auxiliar para desenhar um quadrado no tabuleiro de xadrez.
-    """
-    t.penup()
-    t.goto(x, y)
-    t.pendown()
+def plot_board_with_matplotlib(n, solution):
+    # Cria o padrão do tabuleiro de xadrez
+    board = np.zeros((n, n))
+    board[::2, ::2] = 1  # Quadrados brancos nas posições pares
+    board[1::2, 1::2] = 1  # Quadrados brancos nas posições ímpares
 
-    t.fillcolor(fill_color)
-    t.begin_fill()
+    # Configura o gráfico
+    fig, ax = plt.subplots(figsize=(10, 10))
 
-    for _ in range(4):
-        t.forward(size)
-        t.right(90)
+    # Exibe o tabuleiro
+    ax.imshow(board, cmap='gray', interpolation='nearest')
 
-    t.end_fill()
+    # Posiciona as rainhas
+    for row, col in enumerate(solution):
+        # Ajusta para índices baseados em 0
+        x = col - 1
+        y = row
+        # Desenha um círculo vermelho representando a rainha
+        circle = plt.Circle((x, y), 0.4, color='red', fill=True)
+        ax.add_patch(circle)
 
-def draw_chess_board(board_size, solvedBoard):
-    """
-    Desenha o tabuleiro de xadrez e posiciona as rainhas com base em solvedBoard.
-    """
-    board = turtle.Turtle()
-    board.speed(0)
-    board.hideturtle()
-    square_color = "black"  # A primeira casa é preta
-    start_x = -board_size * 15  # Centraliza o tabuleiro horizontalmente
-    start_y = -board_size * 15  # Centraliza o tabuleiro verticalmente
-    box_size = 30  # Tamanho de cada quadrado
+    # Ajusta os limites e o aspecto
+    ax.set_xlim(-0.5, n - 0.5)
+    ax.set_ylim(-0.5, n - 0.5)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_aspect('equal')
+    plt.gca().invert_yaxis()  # Inverte o eixo y para que a posição [0,0] fique no canto inferior esquerdo
 
-    for i in range(board_size):
-        for j in range(board_size):
-            x = start_x + j * box_size
-            y = start_y + i * box_size
-            if solvedBoard[i][j] != 1:
-                draw_box(board, x, y, box_size, square_color)
-            else:
-                draw_box(board, x, y, box_size, 'green')
-            square_color = 'black' if square_color == 'white' else 'white'  # Alterna a cor após cada coluna
-        if board_size % 2 == 0:
-            square_color = 'black' if square_color == 'white' else 'white'  # Alterna a cor após cada linha se o tabuleiro tiver tamanho par
-
-    turtle.done()
+    plt.show()
 
 # Parâmetros do algoritmo
-n = 100
+n = 15
 population_size = 1000
-max_generations = 1000
+max_generations = 100000
 mutation_rate = 0.8  # Conforme especificado no algoritmo
 
 # Executar o algoritmo genético
@@ -160,18 +150,7 @@ solution, iterations = genetic_algorithm(n, population_size, max_generations, mu
 if solution:
     print(f"Solução encontrada em {iterations} iterações.")
     print("Solução (representação das posições das rainhas):", solution)
-    # Ajustar índices para zero-based
-    zero_indexed_solution = [pos - 1 for pos in solution]
-    # Criar o solvedBoard
-    solvedBoard = [[0]*n for _ in range(n)]
-    for row, col in enumerate(zero_indexed_solution):
-        solvedBoard[row][col] = 1
-    # Imprimir a matriz de valores
-    print("Matriz de valores (tabuleiro):")
-    for row in solvedBoard:
-        print(row)
-    # Inverter as linhas para corresponder ao sistema de coordenadas da função draw_chess_board
-    solvedBoard_for_drawing = solvedBoard[::-1]
-    draw_chess_board(n, solvedBoard_for_drawing)
+    # Plotar o tabuleiro com matplotlib
+    plot_board_with_matplotlib(n, solution)
 else:
     print("Nenhuma solução encontrada.")
