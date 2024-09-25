@@ -18,6 +18,8 @@ def fitness(chromosome):
     t2 = 0
     f1 = [chromosome[i] - i for i in range(n)]
     f2 = [chromosome[i] + i for i in range(n)]
+    # Para [3, 1, 2, 0], f1 = [3-0, 1-1, 2-2, 0-3] = [3, 0, 0, -3].
+    # Para [3, 1, 2, 0], f2 = [3+0, 1+1, 2+2, 0+3] = [3, 2, 4, 3].
     f1.sort()
     f2.sort()
     for i in range(1, n):
